@@ -1,0 +1,15 @@
+save_data: vocab
+src_vocab: vocab/vocab.src
+tgt_vocab: vocab/vocab.tgt
+
+# Corpus opts:
+data:
+  corpus:
+    path_src: segmented/train.bpe.src
+    path_tgt: segmented/train.bpe.tgt
+  valid:
+    path_src: segmented/val.bpe.src
+    path_tgt: segmented/val.bpe.tgt
+
+
+overwrite: True

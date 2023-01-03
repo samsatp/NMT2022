@@ -1,0 +1,27 @@
+save_data: ./example
+
+# Corpus opts:
+data:
+    corpus:
+        path_src: segmented/train.bpe.src
+        path_tgt: segmented/train.bpe.tgt
+    valid:
+        path_src: segmented/val.bpe.src
+        path_tgt: segmented/val.bpe.tgt
+
+
+## Where the vocab(s) will be written
+src_vocab: vocab/vocab.src
+tgt_vocab: vocab/vocab.tgt
+
+save_model: model/no
+train_steps: 500000
+save_checkpoint_steps: 100000
+valid_steps: 25000
+global_attention: none
+dropout: 0.0
+world_size: 1
+gpu_ranks: [0]
+layers: 2
+rnn_size: 512
+word_vec_size: 512

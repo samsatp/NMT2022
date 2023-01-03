@@ -115,3 +115,13 @@ steps:
     - !varstr "train.src"
     - !varstr "train.tgt"
     start: 2001
+
+- type: subset
+  parameters:
+    size: 10000000
+    inputs:
+    - !varstr "train.src"
+    - !varstr "train.tgt"
+    outputs:
+    - !varstr "train_down.src"
+    - !varstr "train_down.tgt"
