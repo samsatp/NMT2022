@@ -1,0 +1,117 @@
+# Common definitions
+common:
+  # The files will go here
+  output_directory: corpus
+  # Language codes for the source and target languages
+  constants:
+    source: en
+    target: es
+
+# Data processing steps
+steps:
+
+# Download datasets from OPUS
+- type: opus_read
+  parameters:
+    corpus_name: OpenSubtitles
+    source_language: !var source
+    target_language: !var target
+    release: latest
+    preprocessing: raw
+    src_output: !varstr "raw_open.{source}.gz"
+    tgt_output: !varstr "raw_open.{target}.gz"
+
+- type: opus_read
+  parameters:
+    corpus_name: Europarl
+    source_language: !var source
+    target_language: !var target
+    release: latest
+    preprocessing: raw
+    src_output: !varstr "raw_euro.{source}.gz"
+    tgt_output: !varstr "raw_euro.{target}.gz"
+
+# Combine two datasets
+- type: concatenate
+  parameters:
+    inputs:
+      - !varstr "raw_open.{source}.gz"
+      - !varstr "raw_euro.{source}.gz"
+    output: !varstr "raw.{source}.gz"
+
+- type: concatenate
+  parameters:
+    inputs:
+      - !varstr "raw_open.{target}.gz"
+      - !varstr "raw_euro.{target}.gz"
+    output: !varstr "raw.{target}.gz"
+
+
+# Preprocess segments
+- type: preprocess
+  parameters:
+    inputs:
+    - !varstr "raw.{source}.gz"
+    - !varstr "raw.{target}.gz"
+    outputs:
+    - !varstr "preprocessed.{source}.gz"
+    - !varstr "preprocessed.{target}.gz"
+    preprocessors:
+    - WhitespaceNormalizer: {}  # Replaces sequences of whitespace characters with a single space.
+
+# remove same segments
+- type: remove_duplicates
+  parameters:
+    inputs:
+    - !varstr "preprocessed.{source}.gz"
+    - !varstr "preprocessed.{target}.gz"
+    outputs:
+    - !varstr "removed_duplicates.{source}.gz"
+    - !varstr "removed_duplicates.{target}.gz"
+
+# Filtered (cleaned) segments
+- type: filter
+  parameters:
+    inputs:
+    - !varstr "removed_duplicates.{source}.gz"
+    - !varstr "removed_duplicates.{target}.gz"
+    outputs:
+    - !varstr "filtered.{source}.gz"
+    - !varstr "filtered.{target}.gz"
+    filters:
+    - LengthFilter:
+        unit: word
+        min_length: 3
+        max_length: 256
+
+- type: slice
+  parameters:
+    inputs:
+    - !varstr "filtered.{source}.gz"
+    - !varstr "filtered.{target}.gz"
+    outputs:
+    - !varstr "test.src"
+    - !varstr "test.tgt"
+    start: 0
+    stop: 1000
+
+- type: slice
+  parameters:
+    inputs:
+    - !varstr "filtered.{source}.gz"
+    - !varstr "filtered.{target}.gz"
+    outputs:
+    - !varstr "val.src"
+    - !varstr "val.tgt"
+    start: 1001
+    stop: 2000
+    
+- type: slice
+  parameters:
+    inputs:
+    - !varstr "filtered.{source}.gz"
+    - !varstr "filtered.{target}.gz"
+    outputs:
+    - !varstr "train.src"
+    - !varstr "train.tgt"
+    start: 2001
