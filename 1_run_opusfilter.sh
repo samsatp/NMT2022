@@ -11,8 +11,9 @@
 #SBATCH --cpus-per-task 1
 #SBATCH --mem-per-cpu=4G
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=YOUR.EMAIL@helsinki.fi
+#SBATCH --mail-user=sathianpong.trangcasanchai@helsinki.fi
 
+mkdir -p corpus
 
 module use -a /projappl/nlpl/software/modules/etc
 module load nlpl-opusfilter
