@@ -33,3 +33,7 @@ spm_encode --model=spmodel_tgt.model -output_format=piece < corpus/val.tgt > seg
 # Tokenize test set
 spm_encode --model=spmodel_src.model -output_format=piece < corpus/test.src > segmented/test.bpe.src
 spm_encode --model=spmodel_tgt.model -output_format=piece < corpus/test.tgt > segmented/test.bpe.tgt
+
+# Tokenize Tatoe set
+spm_encode --model=spmodel_src.model -output_format=piece < corpus/tato_eng.txt > segmented/tato.bpe.src
+spm_encode --model=spmodel_tgt.model -output_format=piece < corpus/tato_spa.txt > segmented/tato.bpe.tgt

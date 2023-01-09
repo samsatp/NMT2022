@@ -22,4 +22,6 @@ module use -a /projappl/nlpl/software/modules/etc
 module load nlpl-opennmt-py
 
 onmt_translate -model model/$model -src $data -output translation/bpe/$model.bpe.tgt -gpu 0
-spm_decode --model=spmodel_tgt.model --input_format=piece < translation/bpe/$model.bpe.tgt > translation/$model.tgt
+
+module load nlpl-mttools
+spm_decode --model=spmodel_tgt.model --input_format=piece < translation/bpe/$model.bpe.tgt > translation/$model.$data.tgt

@@ -1,0 +1,49 @@
+# Common definitions
+common:
+  # The files will go here
+  output_directory: corpus
+  constants:
+    target: es
+
+
+# Data processing steps
+steps:
+
+# Preprocess segments
+- type: preprocess
+  parameters:
+    inputs:
+    - !varstr "wikipedia.txt.gz"
+    outputs:
+    - !varstr "mono_preprocessed.{target}.gz"
+    preprocessors:
+    - WhitespaceNormalizer: {}  # Replaces sequences of whitespace characters with a single space.
+
+# remove same segments
+- type: remove_duplicates
+  parameters:
+    inputs:
+    - !varstr "mono_preprocessed.{target}.gz"
+    outputs:
+    - !varstr "mono_removed_duplicates.{target}.gz"
+
+# Filtered (cleaned) segments
+- type: filter
+  parameters:
+    inputs:
+    - !varstr "mono_removed_duplicates.{target}.gz"
+    outputs:
+    - !varstr "mono_filtered.{target}.gz"
+    filters:
+    - LengthFilter:
+        unit: word
+        min_length: 3
+        max_length: 256
+
+- type: subset
+  parameters:
+    size: 5000000
+    inputs:
+    - !varstr "mono_filtered.{target}.gz"
+    outputs:
+    - !varstr "mono_down.tgt"
