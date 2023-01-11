@@ -9,7 +9,7 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --gres=gpu:v100:1
-#SBATCH --mem-per-cpu=8G
+#SBATCH --mem-per-cpu=4G
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=sathianpong.trangcasanchai@helsinki.fi
 
