@@ -1,0 +1,72 @@
+# Common definitions
+common:
+  # The files will go here
+  output_directory: corpus
+  # Language codes for the source and target languages
+  constants:
+    source: en
+    target: es
+
+# Data processing steps
+steps:
+
+# Filtered (cleaned) segments
+- type: filter
+  parameters:
+    inputs:
+    - !varstr "removed_duplicates.{source}.gz"
+    - !varstr "removed_duplicates.{target}.gz"
+    outputs:
+    - !varstr "filtered.{source}.gz"
+    - !varstr "filtered.{target}.gz"
+    filters:
+    - LengthFilter:
+        unit: word
+        min_length: 3
+        max_length: 256
+    - CrossEntropyFilter:
+        score_type: entropy
+        lm_params:
+          - filename: xxx
+
+- type: slice
+  parameters:
+    inputs:
+    - !varstr "filtered.{source}.gz"
+    - !varstr "filtered.{target}.gz"
+    outputs:
+    - !varstr "test.src"
+    - !varstr "test.tgt"
+    start: 0
+    stop: 1000
+
+- type: slice
+  parameters:
+    inputs:
+    - !varstr "filtered.{source}.gz"
+    - !varstr "filtered.{target}.gz"
+    outputs:
+    - !varstr "val.src"
+    - !varstr "val.tgt"
+    start: 1001
+    stop: 2000
+    
+- type: slice
+  parameters:
+    inputs:
+    - !varstr "filtered.{source}.gz"
+    - !varstr "filtered.{target}.gz"
+    outputs:
+    - !varstr "train.src"
+    - !varstr "train.tgt"
+    start: 2001
+
+- type: subset
+  parameters:
+    size: 10000000
+    inputs:
+    - !varstr "train.src"
+    - !varstr "train.tgt"
+    outputs:
+    - !varstr "train_down.src"
+    - !varstr "train_down.tgt"
