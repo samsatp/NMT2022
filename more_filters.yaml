@@ -1,0 +1,49 @@
+# Common definitions
+common:
+  # The files will go here
+  output_directory: corpus
+  # Language codes for the source and target languages
+  constants:
+    source: en
+    target: es
+
+# Data processing steps
+steps:
+
+- type: subset
+  parameters:
+    size: 10000000
+    inputs:
+    - !varstr "train.src"
+    - !varstr "train.tgt"
+    outputs:
+    - !varstr "train_down.src"
+    - !varstr "train_down.tgt"
+
+
+- type: filter
+  parameters:
+    inputs:
+    - !varstr "train_down.src"
+    - !varstr "train_down.tgt"
+    outputs:
+    - !varstr "train_down_improved_2.src"
+    - !varstr "train_down_improved_2.tgt"
+    filters:
+
+    - LongWordFilter: {}
+
+    - CharacterScoreFilter:
+        scripts: [Latin, Latin]
+
+    - LanguageIDFilter:
+        name: langid
+        id_method: langid
+        languages: [en, es]
+
+    - TerminalPunctuationFilter: {}
+
+    - NonZeroNumeralsFilter: {}
+    - SimilarityFilter:
+        threshold: 0.9
+    
